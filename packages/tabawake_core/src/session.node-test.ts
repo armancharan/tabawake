@@ -8,6 +8,7 @@ import {
   capabilityFor,
   desktopCapability,
   initialSession,
+  offeredModes,
   reduceSession,
   webCapability,
   type SessionSnapshot,
@@ -101,18 +102,32 @@ describe("webCapability", () => {
 })
 
 describe("desktopCapability", () => {
-  it("supports system and still withholds presence", () => {
+  it("supports screen and video and withholds what is not built", () => {
     assert.equal(desktopCapability("generated"), "supported")
     assert.equal(desktopCapability("presence"), "unsupported")
     assert.equal(desktopCapability("screen"), "supported")
-    assert.equal(desktopCapability("system"), "supported")
+    assert.equal(desktopCapability("system"), "unsupported")
   })
 })
 
 describe("capabilityFor", () => {
   it("selects the matrix by runtime", () => {
     assert.equal(capabilityFor("web", "system"), "unsupported")
-    assert.equal(capabilityFor("desktop", "system"), "supported")
+    assert.equal(capabilityFor("desktop", "system"), "unsupported")
     assert.equal(capabilityFor("desktop", "presence"), "unsupported")
+  })
+})
+
+describe("offeredModes", () => {
+  describe("when the runtime is web", () => {
+    it("omits unsupported modes", () => {
+      assert.deepEqual(offeredModes("web"), ["screen", "generated"])
+    })
+  })
+
+  describe("when the runtime is desktop", () => {
+    it("omits modes that are not built", () => {
+      assert.deepEqual(offeredModes("desktop"), ["screen", "generated"])
+    })
   })
 })
