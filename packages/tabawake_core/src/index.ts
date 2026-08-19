@@ -1,7 +1,12 @@
 export {
+  capabilityFor,
+  desktopCapability,
   initialSession,
+  offeredModes,
   reduceSession,
   webCapability,
+  type AppRuntime,
+  type Capability,
   type KeepAwakeMode,
   type SessionEvent,
   type SessionSnapshot,

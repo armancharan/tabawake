@@ -5,7 +5,10 @@
 import assert from "node:assert/strict"
 import { describe, it } from "node:test"
 import {
+  capabilityFor,
+  desktopCapability,
   initialSession,
+  offeredModes,
   reduceSession,
   webCapability,
   type SessionSnapshot,
@@ -91,9 +94,40 @@ describe("reduceSession", () => {
 
 describe("webCapability", () => {
   it("marks desktop-only modes unsupported", () => {
-    assert.equal(webCapability("screen"), "supported")
     assert.equal(webCapability("generated"), "supported")
-    assert.equal(webCapability("system"), "unsupported")
     assert.equal(webCapability("presence"), "unsupported")
+    assert.equal(webCapability("screen"), "supported")
+    assert.equal(webCapability("system"), "unsupported")
+  })
+})
+
+describe("desktopCapability", () => {
+  it("supports screen and video and withholds what is not built", () => {
+    assert.equal(desktopCapability("generated"), "supported")
+    assert.equal(desktopCapability("presence"), "unsupported")
+    assert.equal(desktopCapability("screen"), "supported")
+    assert.equal(desktopCapability("system"), "unsupported")
+  })
+})
+
+describe("capabilityFor", () => {
+  it("selects the matrix by runtime", () => {
+    assert.equal(capabilityFor("web", "system"), "unsupported")
+    assert.equal(capabilityFor("desktop", "system"), "unsupported")
+    assert.equal(capabilityFor("desktop", "presence"), "unsupported")
+  })
+})
+
+describe("offeredModes", () => {
+  describe("when the runtime is web", () => {
+    it("omits unsupported modes", () => {
+      assert.deepEqual(offeredModes("web"), ["screen", "generated"])
+    })
+  })
+
+  describe("when the runtime is desktop", () => {
+    it("omits modes that are not built", () => {
+      assert.deepEqual(offeredModes("desktop"), ["screen", "generated"])
+    })
   })
 })

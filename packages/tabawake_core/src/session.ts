@@ -10,6 +10,11 @@ export type SessionState = "idle" | "armed" | "active" | "paused" | "error"
 /** Runtime modes. `system` / `presence` are desktop-only (unsupported on web). */
 export type KeepAwakeMode = "screen" | "generated" | "system" | "presence"
 
+/** Which host is running the UI. */
+export type AppRuntime = "desktop" | "web"
+
+export type Capability = "degraded" | "supported" | "unsupported"
+
 export type StopReason =
   | "user"
   | "visibility_loss"
@@ -126,20 +131,63 @@ export function reduceSession(
 }
 
 /** Web capability matrix — what the browser surface can honestly claim. */
-export function webCapability(
-  mode: KeepAwakeMode,
-): "supported" | "degraded" | "unsupported" {
+export function webCapability(mode: KeepAwakeMode): Capability {
   switch (mode) {
+    case "generated":
     case "screen":
       return "supported"
-    case "generated":
-      return "supported"
-    case "system":
     case "presence":
+    case "system":
       return "unsupported"
     default: {
       const _exhaustive: never = mode
       return _exhaustive
     }
   }
+}
+
+/** Desktop capability matrix — `system` / `presence` are not built in this slice. */
+export function desktopCapability(mode: KeepAwakeMode): Capability {
+  switch (mode) {
+    case "generated":
+    case "screen":
+      return "supported"
+    case "presence":
+    case "system":
+      return "unsupported"
+    default: {
+      const _exhaustive: never = mode
+      return _exhaustive
+    }
+  }
+}
+
+export function capabilityFor(
+  runtime: AppRuntime,
+  mode: KeepAwakeMode,
+): Capability {
+  switch (runtime) {
+    case "desktop":
+      return desktopCapability(mode)
+    case "web":
+      return webCapability(mode)
+    default: {
+      const _exhaustive: never = runtime
+      return _exhaustive
+    }
+  }
+}
+
+const KEEP_AWAKE_MODES: KeepAwakeMode[] = [
+  "screen",
+  "generated",
+  "system",
+  "presence",
+]
+
+/** Modes this host can honestly offer. Unsupported modes stay out of the UI. */
+export function offeredModes(runtime: AppRuntime): KeepAwakeMode[] {
+  return KEEP_AWAKE_MODES.filter(
+    (mode) => capabilityFor(runtime, mode) !== "unsupported",
+  )
 }
