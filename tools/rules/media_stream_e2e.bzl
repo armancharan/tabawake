@@ -19,11 +19,11 @@ def media_stream_e2e(name, data = [], tags = [], visibility = None):
         name = name,
         srcs = ["//e2e:run_media_stream_e2e.sh"],
         data = data + [
-            "//e2e:playwright_files",
             "//apps/web:web_files",
             "//crates/frame_engine:frame_engine_web_files",
+            "//e2e:playwright_files",
         ],
-        tags = tags + ["e2e", "local", "exclusive"],
+        tags = tags + ["e2e", "exclusive", "local"],
         size = "large",
         timeout = "long",
         visibility = visibility if visibility != None else ["//visibility:public"],

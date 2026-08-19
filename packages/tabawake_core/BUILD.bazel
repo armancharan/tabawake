@@ -5,9 +5,9 @@ package(default_visibility = ["//visibility:public"])
 filegroup(
     name = "core_srcs",
     srcs = glob([
+        "package.json",
         "src/**/*.ts",
         "vitest.config.ts",
-        "package.json",
     ]),
 )
 
@@ -21,7 +21,7 @@ sh_test(
     ],
     size = "small",
     tags = [
-        "nodejs",
         "local",
+        "nodejs",
     ],
 )

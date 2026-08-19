@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest"
-import { createTimerController } from "./presenter"
 import type { FrameEngine } from "./engine"
+import { createTimerController } from "./presenter"
 
 function mockEngine(): FrameEngine {
   return {

@@ -25,9 +25,9 @@ stage_one() {
   fi
 }
 
+stage_one "${OUT}/frame_engine.d.ts"
 stage_one "${OUT}/frame_engine.js"
 stage_one "${OUT}/frame_engine_bg.wasm"
-stage_one "${OUT}/frame_engine.d.ts"
 stage_one "${OUT}/frame_engine_bg.wasm.d.ts"
 
 if [[ "${copied}" -eq 0 ]]; then
@@ -38,9 +38,9 @@ fi
 
 # Drop stale public copies from the earlier layout.
 rm -f \
+  "${ROOT}/apps/web/public/frame_engine.d.ts" \
   "${ROOT}/apps/web/public/frame_engine.js" \
   "${ROOT}/apps/web/public/frame_engine_bg.wasm" \
-  "${ROOT}/apps/web/public/frame_engine.d.ts" \
   "${ROOT}/apps/web/public/frame_engine_bg.wasm.d.ts"
 
 echo "Done → ${DEST}"

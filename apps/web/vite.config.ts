@@ -1,29 +1,29 @@
-import { defineConfig } from "vite"
 import { dirname, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
+import { defineConfig } from "vite"
 
 const rootDir = dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
-  root: ".",
-  publicDir: "public",
   assetsInclude: ["**/*.wasm"],
+  build: {
+    emptyOutDir: true,
+    outDir: "dist",
+    target: "es2022",
+  },
+  preview: {
+    host: "127.0.0.1",
+    port: 4173,
+  },
+  publicDir: "public",
   resolve: {
     alias: {
       "@tabawake/core": resolve(rootDir, "../../packages/tabawake_core/src"),
     },
   },
+  root: ".",
   server: {
+    host: "127.0.0.1",
     port: 5173,
-    host: "127.0.0.1",
-  },
-  preview: {
-    port: 4173,
-    host: "127.0.0.1",
-  },
-  build: {
-    target: "es2022",
-    outDir: "dist",
-    emptyOutDir: true,
   },
 })

@@ -74,6 +74,6 @@ jobs:
         with:
           name: playwright-trace
           path: |
-            e2e/test-results/
             e2e/playwright-report/
+            e2e/test-results/
           if-no-files-found: ignore

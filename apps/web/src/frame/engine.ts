@@ -4,26 +4,26 @@
  */
 
 export type FrameEngine = {
+  frameByteLen: (width: number, height: number) => number
   renderFrame: (
     width: number,
     height: number,
     tMs: number,
     fidelity: number,
   ) => Uint8Array
-  frameByteLen: (width: number, height: number) => number
 }
 
 type BindgenModule = {
   default: (input?: {
     module_or_path?: RequestInfo | URL | Response | BufferSource | WebAssembly.Module
   }) => Promise<unknown>
+  frameByteLen: (width: number, height: number) => number
   renderFrame: (
     width: number,
     height: number,
     tMs: number,
     fidelity: number,
   ) => Uint8Array
-  frameByteLen: (width: number, height: number) => number
 }
 
 let enginePromise: Promise<FrameEngine> | null = null
@@ -35,8 +35,8 @@ export function loadFrameEngine(): Promise<FrameEngine> {
       const mod = (await import("../generated/frame_engine.js")) as BindgenModule
       await mod.default()
       return {
-        renderFrame: mod.renderFrame,
         frameByteLen: mod.frameByteLen,
+        renderFrame: mod.renderFrame,
       }
     })().catch((err) => {
       enginePromise = null

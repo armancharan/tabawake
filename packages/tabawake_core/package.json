@@ -1,7 +1,7 @@
 {
   "name": "@tabawake/core",
-  "version": "0.1.0",
   "private": true,
+  "version": "0.1.0",
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",

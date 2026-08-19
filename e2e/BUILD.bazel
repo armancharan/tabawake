@@ -1,6 +1,6 @@
-package(default_visibility = ["//visibility:public"])
-
 load("//tools/rules:media_stream_e2e.bzl", "media_stream_e2e")
+
+package(default_visibility = ["//visibility:public"])
 
 exports_files([
     "run_media_stream_e2e.sh",

@@ -7,13 +7,7 @@ import {
   type SessionSnapshot,
   type StopReason,
 } from "@tabawake/core"
-import {
-  createTimerController,
-  loadFrameEngine,
-  type FrameHost,
-  type TimerController,
-  type TimerFidelity,
-} from "./frame"
+import { screenOptionState } from "./drivers/screenOption"
 import {
   classifyWakeLockError,
   startWakeLockDriver,
@@ -22,7 +16,13 @@ import {
   type DriverSession,
   type WakeLockFailureKind,
 } from "./drivers/wakeLock"
-import { screenOptionState } from "./drivers/screenOption"
+import {
+  createTimerController,
+  loadFrameEngine,
+  type FrameHost,
+  type TimerController,
+  type TimerFidelity,
+} from "./frame"
 
 /** Modes offered in the web UI (desktop-only modes stay in the domain). */
 const WEB_MODES: KeepAwakeMode[] = ["screen", "generated"]

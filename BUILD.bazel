@@ -13,11 +13,11 @@ filegroup(
             "**/*",
         ],
         exclude = [
-            "bazel-*/**",
-            "node_modules/**",
+            "**/.git/**",
             "apps/web/dist/**",
             "apps/web/node_modules/**",
-            "**/.git/**",
+            "bazel-*/**",
+            "node_modules/**",
         ],
     ),
 )

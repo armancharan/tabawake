@@ -5,9 +5,9 @@ export interface DriverSession {
 }
 
 export type WakeLockFailureKind =
-  | "unsupported"
-  | "permission_denied"
   | "driver_error"
+  | "permission_denied"
+  | "unsupported"
 
 /** True when the Screen Wake Lock API exists on this page. */
 export function wakeLockSupported(
@@ -36,12 +36,12 @@ export function classifyWakeLockError(
 /** User-facing copy for Screen Wake Lock failures. */
 export function wakeLockUserMessage(kind: WakeLockFailureKind): string {
   switch (kind) {
-    case "unsupported":
-      return "Not available in this browser. Use Video."
-    case "permission_denied":
-      return "Browser blocked Screen lock. Allow wake lock for this site, then try again — or use Video."
     case "driver_error":
       return "Couldn’t start Screen lock. Try again, or use Video."
+    case "permission_denied":
+      return "Browser blocked Screen lock. Allow wake lock for this site, then try again — or use Video."
+    case "unsupported":
+      return "Not available in this browser. Use Video."
   }
 }
 
