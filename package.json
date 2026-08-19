@@ -5,15 +5,21 @@
   "type": "module",
   "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "build": "bash scripts/ensure-frame-engine.sh && pnpm --filter @tabawake/web build",
-    "dev": "bash scripts/ensure-frame-engine.sh && pnpm --filter @tabawake/web dev",
+    "build": "pnpm wasm:stage && pnpm --filter @tabawake/web build",
+    "dev": "pnpm wasm:stage && pnpm --filter @tabawake/web dev",
     "preview": "pnpm --filter @tabawake/web preview",
-    "test": "pnpm --filter @tabawake/core test && pnpm --filter @tabawake/web test",
+    "test": "pnpm --filter @tabawake/core test && pnpm wasm:stage && pnpm --filter @tabawake/web test",
     "test:coverage": "pnpm --filter @tabawake/core test:coverage",
-    "test:e2e": "pnpm --filter @tabawake/web build && pnpm --filter @tabawake/e2e test",
-    "wasm:stage": "bash scripts/stage-wasm.sh"
+    "test:e2e": "pnpm build && pnpm --filter @tabawake/e2e test",
+    "wasm:stage": "tsx scripts/stage-wasm.ts"
   },
   "devDependencies": {
+    "@effect/platform": "^0.94.0",
+    "@effect/platform-node": "^0.104.0",
+    "@effect/vitest": "^0.30.0",
+    "@types/node": "^22.13.10",
+    "effect": "^3.19.0",
+    "tsx": "^4.20.0",
     "typescript": "^5.8.2",
     "vitest": "^3.0.9"
   }

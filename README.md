@@ -14,8 +14,7 @@ brew install bazelisk   # or use the CI setup-bazel action
 corepack enable && corepack prepare pnpm@9 --activate
 
 pnpm install
-pnpm wasm:stage         # bazel build + copy WASM into apps/web/src/generated
-pnpm dev                # http://127.0.0.1:5173
+pnpm dev                # stages WASM, then http://127.0.0.1:5173
 ```
 
 ## Scripts
@@ -27,7 +26,7 @@ pnpm dev                # http://127.0.0.1:5173
 | `bazelisk test //e2e:media_stream_e2e` | Same e2e through Bazel |
 | `pnpm build` | Production web build |
 | `pnpm dev` | Vite web UI |
-| `pnpm test` | Core state-machine unit tests |
+| `pnpm test` | Core + web unit tests (stages WASM for the web suite) |
 | `pnpm test:e2e` | Playwright media-stream contract |
 | `pnpm wasm:stage` | Build `//crates/frame_engine:frame_engine_web` and stage artifacts |
 

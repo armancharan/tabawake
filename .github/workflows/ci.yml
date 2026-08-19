@@ -40,8 +40,6 @@ jobs:
           repository-cache: true
 
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - uses: actions/setup-node@v4
         with:
@@ -57,10 +55,8 @@ jobs:
       - name: Core coverage
         run: pnpm test:coverage
 
-      - name: Stage WASM + build web
-        run: |
-          bash scripts/stage-wasm.sh
-          pnpm build
+      - name: Production web build
+        run: pnpm build
 
       - name: Install Playwright Chromium
         run: pnpm --filter @tabawake/e2e exec playwright install --with-deps chromium
