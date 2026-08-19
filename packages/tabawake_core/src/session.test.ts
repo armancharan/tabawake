@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest"
 import {
+  capabilityFor,
+  desktopCapability,
   initialSession,
   reduceSession,
   webCapability,
@@ -91,9 +93,26 @@ describe("reduceSession", () => {
 
 describe("webCapability", () => {
   it("marks desktop-only modes unsupported", () => {
-    expect(webCapability("screen")).toBe("supported")
     expect(webCapability("generated")).toBe("supported")
-    expect(webCapability("system")).toBe("unsupported")
     expect(webCapability("presence")).toBe("unsupported")
+    expect(webCapability("screen")).toBe("supported")
+    expect(webCapability("system")).toBe("unsupported")
+  })
+})
+
+describe("desktopCapability", () => {
+  it("supports system and still withholds presence", () => {
+    expect(desktopCapability("generated")).toBe("supported")
+    expect(desktopCapability("presence")).toBe("unsupported")
+    expect(desktopCapability("screen")).toBe("supported")
+    expect(desktopCapability("system")).toBe("supported")
+  })
+})
+
+describe("capabilityFor", () => {
+  it("selects the matrix by runtime", () => {
+    expect(capabilityFor("web", "system")).toBe("unsupported")
+    expect(capabilityFor("desktop", "system")).toBe("supported")
+    expect(capabilityFor("desktop", "presence")).toBe("unsupported")
   })
 })

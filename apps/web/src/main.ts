@@ -1,12 +1,13 @@
 import "./styles/main.css"
 import {
+  capabilityFor,
   initialSession,
   reduceSession,
-  webCapability,
   type KeepAwakeMode,
   type SessionSnapshot,
   type StopReason,
 } from "@tabawake/core"
+import { modeCopy } from "./copy/modes"
 import { screenOptionState } from "./drivers/screenOption"
 import {
   classifyWakeLockError,
@@ -24,36 +25,11 @@ import {
   type TimerFidelity,
 } from "./frame"
 
+/** Host for this page. Desktop detection lands with the Tauri shell. */
+const RUNTIME = "web" as const
+
 /** Modes offered in the web UI (desktop-only modes stay in the domain). */
 const WEB_MODES: KeepAwakeMode[] = ["screen", "generated"]
-
-const SCREEN_WAKE_LOCK_MDN =
-  "https://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API"
-
-const MEDIA_STREAM_MDN =
-  "https://developer.mozilla.org/en-US/docs/Web/API/MediaStream_API"
-
-const MODE_COPY: Record<
-  KeepAwakeMode,
-  { label: string; blurbHtml: string }
-> = {
-  screen: {
-    label: "Screen Wake Lock",
-    blurbHtml: `Uses the browser’s <a class="mode-docs" href="${SCREEN_WAKE_LOCK_MDN}" target="_blank" rel="noopener noreferrer">Screen Wake Lock API</a> to keep this display on. Timer draws on a <code class="mode-code">&lt;canvas /&gt;</code>.`,
-  },
-  generated: {
-    label: "Video",
-    blurbHtml: `Uses the browser’s <a class="mode-docs" href="${MEDIA_STREAM_MDN}" target="_blank" rel="noopener noreferrer">MediaStream API</a> to keep this display awake. Timer plays through a <code class="mode-code">&lt;video /&gt;</code>.`,
-  },
-  system: {
-    label: "System",
-    blurbHtml: "Coming in the desktop app.",
-  },
-  presence: {
-    label: "Presence",
-    blurbHtml: "Coming in the desktop app.",
-  },
-}
 
 let snap: SessionSnapshot = initialSession()
 let mode: KeepAwakeMode = "generated"
@@ -259,7 +235,7 @@ function onFidelityChange(next: TimerFidelity) {
 
 function modeLabel(m: KeepAwakeMode | null): string {
   if (!m) return "—"
-  return MODE_COPY[m].label
+  return modeCopy(RUNTIME, m).label
 }
 
 function statusLine(): string {
@@ -378,9 +354,9 @@ function paintModes() {
     apiPresent: wakeLockSupported(),
     failure: screenFailure,
     selected: selected === "screen",
-    unsupportedMessage: wakeLockUserMessage("unsupported"),
-    blockedMessage: wakeLockUserMessage("permission_denied"),
-    driverMessage: wakeLockUserMessage("driver_error"),
+    unsupportedMessage: wakeLockUserMessage("unsupported", RUNTIME),
+    blockedMessage: wakeLockUserMessage("permission_denied", RUNTIME),
+    driverMessage: wakeLockUserMessage("driver_error", RUNTIME),
   })
 
   if (hasModes && patchModesInPlace(screen, selected)) {
@@ -388,8 +364,8 @@ function paintModes() {
   }
 
   els.modes.innerHTML = WEB_MODES.map((m) => {
-    const copy = MODE_COPY[m]
-    const cap = webCapability(m)
+    const copy = modeCopy(RUNTIME, m)
+    const cap = capabilityFor(RUNTIME, m)
     if (m === "screen") {
       const retry = screen.showRetry
         ? ` <button type="button" class="mode-retry" data-ref="screen-retry">Try again</button>`
@@ -471,7 +447,7 @@ function paint() {
     els.toggleIconEnd.textContent = "☼"
   }
   els.toggle.setAttribute("aria-pressed", sessionOn ? "true" : "false")
-  els.toggle.disabled = webCapability(mode) === "unsupported" && !sessionOn
+  els.toggle.disabled = capabilityFor(RUNTIME, mode) === "unsupported" && !sessionOn
   els.pause.hidden = !sessionOn
   els.pauseLabel.textContent = isPaused ? "Resume" : "Pause"
   els.pauseIcon.textContent = isPaused ? "▶" : "⏸"
@@ -608,7 +584,7 @@ async function startDriverForCurrentMode() {
     }
     return
   }
-  throw Object.assign(new Error(`${MODE_COPY[mode].label} needs the desktop app`), {
+  throw Object.assign(new Error(`${modeCopy(RUNTIME, mode).label} needs the desktop app`), {
     reason: "unsupported" as StopReason,
   })
 }
@@ -655,7 +631,7 @@ async function retryScreenMechanism() {
 
 async function onModeChange(next: KeepAwakeMode) {
   if (next === mode) return
-  if (webCapability(next) === "unsupported") return
+  if (capabilityFor(RUNTIME, next) === "unsupported") return
 
   const sessionLive = snap.state === "active" || snap.state === "paused"
   let pendingScreen: DriverSession | null = null

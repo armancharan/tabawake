@@ -50,8 +50,20 @@ describe("classifyWakeLockError", () => {
 describe("wakeLockUserMessage", () => {
   it("explains unsupported, blocked, and generic failures", () => {
     expect(wakeLockUserMessage("unsupported")).toMatch(/not available/i)
+    expect(wakeLockUserMessage("unsupported")).toMatch(/browser/i)
     expect(wakeLockUserMessage("permission_denied")).toMatch(/blocked/i)
-    expect(wakeLockUserMessage("permission_denied")).toMatch(/try again/i)
+    expect(wakeLockUserMessage("permission_denied")).toMatch(/this site/i)
     expect(wakeLockUserMessage("driver_error")).toMatch(/try again/i)
+  })
+
+  it("drops site and browser language on desktop", () => {
+    expect(wakeLockUserMessage("unsupported", "desktop")).toMatch(/this window/i)
+    expect(wakeLockUserMessage("unsupported", "desktop")).not.toMatch(/browser/i)
+    expect(wakeLockUserMessage("permission_denied", "desktop")).toMatch(
+      /the window/i,
+    )
+    expect(wakeLockUserMessage("permission_denied", "desktop")).not.toMatch(
+      /this site/i,
+    )
   })
 })

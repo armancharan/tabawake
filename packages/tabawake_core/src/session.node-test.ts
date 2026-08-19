@@ -5,6 +5,8 @@
 import assert from "node:assert/strict"
 import { describe, it } from "node:test"
 import {
+  capabilityFor,
+  desktopCapability,
   initialSession,
   reduceSession,
   webCapability,
@@ -91,9 +93,26 @@ describe("reduceSession", () => {
 
 describe("webCapability", () => {
   it("marks desktop-only modes unsupported", () => {
-    assert.equal(webCapability("screen"), "supported")
     assert.equal(webCapability("generated"), "supported")
-    assert.equal(webCapability("system"), "unsupported")
     assert.equal(webCapability("presence"), "unsupported")
+    assert.equal(webCapability("screen"), "supported")
+    assert.equal(webCapability("system"), "unsupported")
+  })
+})
+
+describe("desktopCapability", () => {
+  it("supports system and still withholds presence", () => {
+    assert.equal(desktopCapability("generated"), "supported")
+    assert.equal(desktopCapability("presence"), "unsupported")
+    assert.equal(desktopCapability("screen"), "supported")
+    assert.equal(desktopCapability("system"), "supported")
+  })
+})
+
+describe("capabilityFor", () => {
+  it("selects the matrix by runtime", () => {
+    assert.equal(capabilityFor("web", "system"), "unsupported")
+    assert.equal(capabilityFor("desktop", "system"), "supported")
+    assert.equal(capabilityFor("desktop", "presence"), "unsupported")
   })
 })

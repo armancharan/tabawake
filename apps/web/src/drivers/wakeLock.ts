@@ -1,4 +1,4 @@
-import type { StopReason } from "@tabawake/core"
+import type { AppRuntime, StopReason } from "@tabawake/core"
 
 export interface DriverSession {
   stop: (reason: StopReason) => Promise<void>
@@ -34,22 +34,30 @@ export function classifyWakeLockError(
 }
 
 /** User-facing copy for Screen Wake Lock failures. */
-export function wakeLockUserMessage(kind: WakeLockFailureKind): string {
+export function wakeLockUserMessage(
+  kind: WakeLockFailureKind,
+  runtime: AppRuntime = "web",
+): string {
   switch (kind) {
     case "driver_error":
       return "Couldn’t start Screen lock. Try again, or use Video."
     case "permission_denied":
-      return "Browser blocked Screen lock. Allow wake lock for this site, then try again — or use Video."
+      return runtime === "desktop"
+        ? "The window blocked Screen lock. Allow wake lock, then try again — or use Video."
+        : "Browser blocked Screen lock. Allow wake lock for this site, then try again — or use Video."
     case "unsupported":
-      return "Not available in this browser. Use Video."
+      return runtime === "desktop"
+        ? "Not available in this window. Use Video."
+        : "Not available in this browser. Use Video."
   }
 }
 
 export function wakeLockErrorMessage(
   err: unknown,
   apiPresent = wakeLockSupported(),
+  runtime: AppRuntime = "web",
 ): string {
-  return wakeLockUserMessage(classifyWakeLockError(err, apiPresent))
+  return wakeLockUserMessage(classifyWakeLockError(err, apiPresent), runtime)
 }
 
 /**

@@ -10,6 +10,11 @@ export type SessionState = "idle" | "armed" | "active" | "paused" | "error"
 /** Runtime modes. `system` / `presence` are desktop-only (unsupported on web). */
 export type KeepAwakeMode = "screen" | "generated" | "system" | "presence"
 
+/** Which host is running the UI. */
+export type AppRuntime = "desktop" | "web"
+
+export type Capability = "degraded" | "supported" | "unsupported"
+
 export type StopReason =
   | "user"
   | "visibility_loss"
@@ -126,15 +131,28 @@ export function reduceSession(
 }
 
 /** Web capability matrix — what the browser surface can honestly claim. */
-export function webCapability(
-  mode: KeepAwakeMode,
-): "supported" | "degraded" | "unsupported" {
+export function webCapability(mode: KeepAwakeMode): Capability {
   switch (mode) {
+    case "generated":
     case "screen":
       return "supported"
-    case "generated":
-      return "supported"
+    case "presence":
     case "system":
+      return "unsupported"
+    default: {
+      const _exhaustive: never = mode
+      return _exhaustive
+    }
+  }
+}
+
+/** Desktop capability matrix — `system` is a native inhibit; `presence` is not built. */
+export function desktopCapability(mode: KeepAwakeMode): Capability {
+  switch (mode) {
+    case "generated":
+    case "screen":
+    case "system":
+      return "supported"
     case "presence":
       return "unsupported"
     default: {
@@ -142,4 +160,11 @@ export function webCapability(
       return _exhaustive
     }
   }
+}
+
+export function capabilityFor(
+  runtime: AppRuntime,
+  mode: KeepAwakeMode,
+): Capability {
+  return runtime === "desktop" ? desktopCapability(mode) : webCapability(mode)
 }
