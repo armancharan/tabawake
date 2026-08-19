@@ -59,7 +59,7 @@ jobs:
 
       - name: Stage WASM + build web
         run: |
-          bash scripts/stage-wasm.sh
+          pnpm wasm:stage
           pnpm build
 
       - name: Install Playwright Chromium
