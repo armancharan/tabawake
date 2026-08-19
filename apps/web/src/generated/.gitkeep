@@ -1,3 +1,1 @@
-# Staged by `pnpm wasm:stage` (Bazel → wasm-bindgen artifacts).
-# `frame_engine.stub.js` is committed; generated `.js` / `.wasm` are gitignored.
-# `tsx scripts/ensure-frame-engine.ts` copies the stub when the real module is missing.
+# Staged by `pnpm wasm:stage`. Bindgen output is gitignored.
