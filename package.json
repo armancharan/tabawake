@@ -8,7 +8,7 @@
     "build": "tsx scripts/ensure-frame-engine.ts && pnpm --filter @tabawake/web build",
     "dev": "tsx scripts/ensure-frame-engine.ts && pnpm --filter @tabawake/web dev",
     "preview": "pnpm --filter @tabawake/web preview",
-    "test": "pnpm --filter @tabawake/core test && pnpm --filter @tabawake/web test && pnpm test:scripts",
+    "test": "tsx scripts/ensure-frame-engine.ts && pnpm --filter @tabawake/core test && pnpm --filter @tabawake/web test && pnpm test:scripts",
     "test:coverage": "pnpm --filter @tabawake/core test:coverage",
     "test:e2e": "pnpm --filter @tabawake/web build && pnpm --filter @tabawake/e2e test",
     "test:scripts": "vitest run --config scripts/vitest.config.ts",
