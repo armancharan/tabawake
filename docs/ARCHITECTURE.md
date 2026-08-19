@@ -6,15 +6,17 @@ Rust→WASM→`<video>` media pipeline, packaged with Bazel custom rules.
 ## Runtime graph
 
 ```text
-UI (apps/web)
+UI (apps/web)  — web, or hosted by apps/desktop (Tauri)
+  → tabawake_core capabilityFor(runtime)
   → tabawake_core session state machine
-    → capability adapter / drivers
-        → WakeLockDriver          (navigator.wakeLock)
-        → GeneratedMediaDriver   (Rust WASM frames → MediaStream → <video>)
+  → drivers
+      → WakeLockDriver          (navigator.wakeLock)
+      → GeneratedMediaDriver   (Rust WASM frames → MediaStream → <video>)
+      → SystemInhibitDriver    (desktop, PR 4)
 ```
 
-Desktop modes (`system`, `presence`) are declared in the capability matrix as
-**unsupported on web** and reserved for a later Tauri shell.
+`system` is supported on desktop and unsupported on web. `presence` is
+unsupported on both. Copy is keyed by the same runtime (`modeCopy`).
 
 ## Honest product limit
 

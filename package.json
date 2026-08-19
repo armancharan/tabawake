@@ -6,6 +6,8 @@
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "build": "bash scripts/ensure-frame-engine.sh && pnpm --filter @tabawake/web build",
+    "desktop:build": "pnpm --filter @tabawake/desktop build",
+    "desktop:dev": "bash scripts/ensure-frame-engine.sh && pnpm --filter @tabawake/desktop dev",
     "dev": "bash scripts/ensure-frame-engine.sh && pnpm --filter @tabawake/web dev",
     "preview": "pnpm --filter @tabawake/web preview",
     "test": "pnpm --filter @tabawake/core test && pnpm --filter @tabawake/web test",
