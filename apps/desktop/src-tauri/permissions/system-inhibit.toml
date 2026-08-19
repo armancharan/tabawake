@@ -1,0 +1,4 @@
+[[permission]]
+identifier = "allow-system-inhibit"
+description = "Allow the webview to start and stop the macOS idle-sleep assertion."
+commands.allow = ["inhibit_system_sleep", "release_system_sleep"]

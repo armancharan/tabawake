@@ -51,7 +51,8 @@ const DESKTOP: Record<KeepAwakeMode, ModeCopy> = {
   },
   system: {
     label: "System",
-    blurbHtml: "OS idle-sleep inhibit. Not wired in this build.",
+    blurbHtml:
+      "Asks macOS not to idle-sleep (<code class=\"mode-code\">PreventUserIdleSystemSleep</code>). Holds after the window is hidden. Timer still draws on a <code class=\"mode-code\">&lt;canvas /&gt;</code>.",
   },
 }
 

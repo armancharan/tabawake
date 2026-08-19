@@ -10,7 +10,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@tabawake/core": "workspace:*"
+    "@tabawake/core": "workspace:*",
+    "@tauri-apps/api": "^2.8.0"
   },
   "devDependencies": {
     "happy-dom": "^20.11.2",

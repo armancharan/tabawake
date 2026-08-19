@@ -10,6 +10,7 @@ import {
 import { modeCopy } from "./copy/modes"
 import { screenOptionState } from "./drivers/screenOption"
 import { detectRuntime } from "./runtime"
+import { startSystemInhibitDriver } from "./drivers/systemInhibit"
 import {
   classifyWakeLockError,
   startWakeLockDriver,
@@ -31,8 +32,8 @@ const RUNTIME = detectRuntime()
 /** Modes offered in the web UI (desktop-only modes stay in the domain). */
 const WEB_MODES: KeepAwakeMode[] = ["screen", "generated"]
 
-/** Same two mechanisms; System waits for the native inhibit driver. */
-const DESKTOP_MODES: KeepAwakeMode[] = ["screen", "generated"]
+/** Screen, Video, and System. Presence stays out of this build. */
+const DESKTOP_MODES: KeepAwakeMode[] = ["screen", "generated", "system"]
 
 const OFFERED_MODES = RUNTIME === "desktop" ? DESKTOP_MODES : WEB_MODES
 
@@ -589,6 +590,10 @@ async function startDriverForCurrentMode() {
     }
     return
   }
+  if (mode === "system") {
+    wakeDriver = await startSystemInhibitDriver()
+    return
+  }
   throw Object.assign(new Error(`${modeCopy(RUNTIME, mode).label} needs the desktop app`), {
     reason: "unsupported" as StopReason,
   })
@@ -772,12 +777,18 @@ async function onPauseToggle() {
   if (!timer) return
   if (snap.state === "active") {
     timer.pause()
+    if (mode === "system") {
+      await stopDriverOnly("paused")
+    }
     snap = reduceSession(snap, { type: "PAUSE", reason: "paused" })
     paint()
     return
   }
   if (snap.state === "paused") {
     snap = reduceSession(snap, { type: "RESUME" })
+    if (mode === "system") {
+      await startDriverForCurrentMode()
+    }
     await timer.play(timer.elapsedMs)
     paint()
   }
