@@ -166,5 +166,14 @@ export function capabilityFor(
   runtime: AppRuntime,
   mode: KeepAwakeMode,
 ): Capability {
-  return runtime === "desktop" ? desktopCapability(mode) : webCapability(mode)
+  switch (runtime) {
+    case "desktop":
+      return desktopCapability(mode)
+    case "web":
+      return webCapability(mode)
+    default: {
+      const _exhaustive: never = runtime
+      return _exhaustive
+    }
+  }
 }
