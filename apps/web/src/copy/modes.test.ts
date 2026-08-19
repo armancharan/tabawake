@@ -16,6 +16,9 @@ describe("modeCopy", () => {
     expect(modeCopy("desktop", "screen").blurbHtml).not.toMatch(/browser/)
     expect(modeCopy("desktop", "generated").blurbHtml).toMatch(/webview/)
     expect(modeCopy("desktop", "presence").blurbHtml).toBe("Not in this build.")
-    expect(modeCopy("desktop", "system").blurbHtml).toMatch(/Not wired/)
+    expect(modeCopy("desktop", "system").blurbHtml).toMatch(
+      /PreventUserIdleSystemSleep/,
+    )
+    expect(modeCopy("desktop", "system").blurbHtml).toMatch(/hidden/)
   })
 })
