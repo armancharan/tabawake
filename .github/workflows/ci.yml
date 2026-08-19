@@ -55,10 +55,8 @@ jobs:
       - name: Core coverage
         run: pnpm test:coverage
 
-      - name: Stage WASM + build web
-        run: |
-          pnpm wasm:stage
-          pnpm build
+      - name: Production web build
+        run: pnpm build
 
       - name: Install Playwright Chromium
         run: pnpm --filter @tabawake/e2e exec playwright install --with-deps chromium

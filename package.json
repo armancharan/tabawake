@@ -5,13 +5,12 @@
   "type": "module",
   "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "build": "tsx scripts/ensure-frame-engine.ts && pnpm --filter @tabawake/web build",
-    "dev": "tsx scripts/ensure-frame-engine.ts && pnpm --filter @tabawake/web dev",
+    "build": "pnpm wasm:stage && pnpm --filter @tabawake/web build",
+    "dev": "pnpm wasm:stage && pnpm --filter @tabawake/web dev",
     "preview": "pnpm --filter @tabawake/web preview",
-    "test": "tsx scripts/ensure-frame-engine.ts && pnpm --filter @tabawake/core test && pnpm --filter @tabawake/web test && pnpm test:scripts",
+    "test": "pnpm --filter @tabawake/core test && pnpm wasm:stage && pnpm --filter @tabawake/web test",
     "test:coverage": "pnpm --filter @tabawake/core test:coverage",
-    "test:e2e": "pnpm --filter @tabawake/web build && pnpm --filter @tabawake/e2e test",
-    "test:scripts": "vitest run --config scripts/vitest.config.ts",
+    "test:e2e": "pnpm build && pnpm --filter @tabawake/e2e test",
     "wasm:stage": "tsx scripts/stage-wasm.ts"
   },
   "devDependencies": {
