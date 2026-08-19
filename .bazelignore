@@ -1,0 +1,11 @@
+node_modules
+apps/web/node_modules
+apps/web/dist
+packages/tabawake_core/node_modules
+e2e/node_modules
+bazel-tabawake
+bazel-keepawake
+bazel-bin
+bazel-out
+bazel-testlogs
+.git

@@ -1,0 +1,39 @@
+load("@rules_rust//rust:defs.bzl", "rust_library", "rust_shared_library", "rust_test")
+load("//tools/rules:wasm_frame_engine.bzl", "wasm_frame_engine")
+
+package(default_visibility = ["//visibility:public"])
+
+# Host-side library for unit tests (no cdylib).
+rust_library(
+    name = "frame_engine_lib",
+    srcs = ["src/lib.rs"],
+    crate_name = "frame_engine",
+    edition = "2021",
+    deps = [
+        "@rules_rust_wasm_bindgen//3rdparty:wasm_bindgen",
+    ],
+)
+
+rust_test(
+    name = "frame_engine_test",
+    crate = ":frame_engine_lib",
+    edition = "2021",
+)
+
+# Browser cdylib used by the custom wasm_frame_engine rule.
+rust_shared_library(
+    name = "frame_engine_wasm",
+    srcs = ["src/lib.rs"],
+    crate_name = "frame_engine",
+    edition = "2021",
+    target_compatible_with = ["@platforms//cpu:wasm32"],
+    deps = [
+        "@rules_rust_wasm_bindgen//3rdparty:wasm_bindgen",
+    ],
+)
+
+wasm_frame_engine(
+    name = "frame_engine_web",
+    crate = ":frame_engine_wasm",
+    out_name = "frame_engine",
+)

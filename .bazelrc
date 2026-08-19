@@ -1,0 +1,6 @@
+common --enable_bzlmod
+
+test --test_output=errors
+test --test_summary=detailed
+
+try-import %workspace%/.bazelrc.user

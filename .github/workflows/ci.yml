@@ -1,0 +1,79 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bazel:
+    name: bazel test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: bazel-contrib/setup-bazel@0.14.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
+
+      - name: Rust + core (Bazel)
+        run: |
+          bazelisk test //crates/frame_engine:frame_engine_test //packages/tabawake_core:tests
+          bazelisk build //crates/frame_engine:frame_engine_web
+
+  node:
+    name: core + e2e
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: bazel-contrib/setup-bazel@0.14.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Core coverage
+        run: pnpm test:coverage
+
+      - name: Stage WASM + build web
+        run: |
+          bash scripts/stage-wasm.sh
+          pnpm build
+
+      - name: Install Playwright Chromium
+        run: pnpm --filter @tabawake/e2e exec playwright install --with-deps chromium
+
+      - name: Media stream e2e
+        run: pnpm test:e2e
+
+      - name: Upload Playwright trace
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-trace
+          path: |
+            e2e/test-results/
+            e2e/playwright-report/
+          if-no-files-found: ignore

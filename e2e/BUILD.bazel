@@ -1,0 +1,25 @@
+package(default_visibility = ["//visibility:public"])
+
+load("//tools/rules:media_stream_e2e.bzl", "media_stream_e2e")
+
+exports_files([
+    "run_media_stream_e2e.sh",
+])
+
+filegroup(
+    name = "playwright_files",
+    srcs = glob([
+        "**/*",
+    ], exclude = [
+        "node_modules/**",
+        "playwright-report/**",
+        "test-results/**",
+    ]),
+)
+
+media_stream_e2e(
+    name = "media_stream_e2e",
+    tags = [
+        "requires-network",
+    ],
+)

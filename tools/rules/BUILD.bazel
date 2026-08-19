@@ -1,0 +1,6 @@
+exports_files([
+    "wasm_frame_engine.bzl",
+    "media_stream_e2e.bzl",
+])
+
+package(default_visibility = ["//visibility:public"])

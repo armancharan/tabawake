@@ -1,0 +1,27 @@
+load("@rules_shell//shell:sh_test.bzl", "sh_test")
+
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "core_srcs",
+    srcs = glob([
+        "src/**/*.ts",
+        "vitest.config.ts",
+        "package.json",
+    ]),
+)
+
+# Uses the host Node binary (Node 22+ strip-types). Marked local so the
+# sandbox still has PATH access to developer/CI node without rules_nodejs.
+sh_test(
+    name = "tests",
+    srcs = ["run_vitest.sh"],
+    data = [
+        ":core_srcs",
+    ],
+    size = "small",
+    tags = [
+        "nodejs",
+        "local",
+    ],
+)
