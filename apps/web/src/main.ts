@@ -9,6 +9,7 @@ import {
 } from "@tabawake/core"
 import { modeCopy } from "./copy/modes"
 import { screenOptionState } from "./drivers/screenOption"
+import { detectRuntime } from "./runtime"
 import {
   classifyWakeLockError,
   startWakeLockDriver,
@@ -25,11 +26,15 @@ import {
   type TimerFidelity,
 } from "./frame"
 
-/** Host for this page. Desktop detection lands with the Tauri shell. */
-const RUNTIME = "web" as const
+const RUNTIME = detectRuntime()
 
 /** Modes offered in the web UI (desktop-only modes stay in the domain). */
 const WEB_MODES: KeepAwakeMode[] = ["screen", "generated"]
+
+/** Same two mechanisms; System waits for the native inhibit driver. */
+const DESKTOP_MODES: KeepAwakeMode[] = ["screen", "generated"]
+
+const OFFERED_MODES = RUNTIME === "desktop" ? DESKTOP_MODES : WEB_MODES
 
 let snap: SessionSnapshot = initialSession()
 let mode: KeepAwakeMode = "generated"
@@ -363,7 +368,7 @@ function paintModes() {
     return
   }
 
-  els.modes.innerHTML = WEB_MODES.map((m) => {
+  els.modes.innerHTML = OFFERED_MODES.map((m) => {
     const copy = modeCopy(RUNTIME, m)
     const cap = capabilityFor(RUNTIME, m)
     if (m === "screen") {
