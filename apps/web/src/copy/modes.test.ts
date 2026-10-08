@@ -15,5 +15,12 @@ describe("modeCopy", () => {
       expect(modeCopy("desktop", "screen").blurbHtml).not.toMatch(/browser/)
       expect(modeCopy("desktop", "generated").blurbHtml).toMatch(/webview/)
     })
+
+    it("describes the system inhibit", () => {
+      expect(modeCopy("desktop", "system").blurbHtml).toMatch(
+        /PreventUserIdleSystemSleep/,
+      )
+      expect(modeCopy("desktop", "system").blurbHtml).toMatch(/hidden/)
+    })
   })
 })

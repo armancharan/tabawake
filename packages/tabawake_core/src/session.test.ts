@@ -102,18 +102,18 @@ describe("webCapability", () => {
 })
 
 describe("desktopCapability", () => {
-  it("supports screen and video and withholds what is not built", () => {
+  it("supports screen, video, and system, and withholds presence", () => {
     expect(desktopCapability("generated")).toBe("supported")
     expect(desktopCapability("presence")).toBe("unsupported")
     expect(desktopCapability("screen")).toBe("supported")
-    expect(desktopCapability("system")).toBe("unsupported")
+    expect(desktopCapability("system")).toBe("supported")
   })
 })
 
 describe("capabilityFor", () => {
   it("selects the matrix by runtime", () => {
     expect(capabilityFor("web", "system")).toBe("unsupported")
-    expect(capabilityFor("desktop", "system")).toBe("unsupported")
+    expect(capabilityFor("desktop", "system")).toBe("supported")
     expect(capabilityFor("desktop", "presence")).toBe("unsupported")
   })
 })
@@ -127,7 +127,7 @@ describe("offeredModes", () => {
 
   describe("when the runtime is desktop", () => {
     it("omits modes that are not built", () => {
-      expect(offeredModes("desktop")).toEqual(["screen", "generated"])
+      expect(offeredModes("desktop")).toEqual(["screen", "generated", "system"])
     })
   })
 })

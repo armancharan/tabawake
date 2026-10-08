@@ -11,6 +11,7 @@ import {
 import { modeCopy } from "./copy/modes"
 import { screenOptionState } from "./drivers/screenOption"
 import { detectRuntime } from "./runtime"
+import { startSystemInhibitDriver } from "./drivers/systemInhibit"
 import {
   classifyWakeLockError,
   startWakeLockDriver,
@@ -581,6 +582,10 @@ async function startDriverForCurrentMode() {
     }
     return
   }
+  if (mode === "system") {
+    wakeDriver = await startSystemInhibitDriver()
+    return
+  }
   throw Object.assign(
     new Error(`${modeCopy(RUNTIME, mode).label} is not supported on this host`),
     {
@@ -767,12 +772,18 @@ async function onPauseToggle() {
   if (!timer) return
   if (snap.state === "active") {
     timer.pause()
+    if (mode === "system") {
+      await stopDriverOnly("paused")
+    }
     snap = reduceSession(snap, { type: "PAUSE", reason: "paused" })
     paint()
     return
   }
   if (snap.state === "paused") {
     snap = reduceSession(snap, { type: "RESUME" })
+    if (mode === "system") {
+      await startDriverForCurrentMode()
+    }
     await timer.play(timer.elapsedMs)
     paint()
   }

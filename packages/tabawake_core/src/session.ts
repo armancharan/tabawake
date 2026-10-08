@@ -146,14 +146,14 @@ export function webCapability(mode: KeepAwakeMode): Capability {
   }
 }
 
-/** Desktop capability matrix — `system` / `presence` are not built in this slice. */
+/** Desktop capability matrix — `presence` is not built in this slice. */
 export function desktopCapability(mode: KeepAwakeMode): Capability {
   switch (mode) {
     case "generated":
     case "screen":
+    case "system":
       return "supported"
     case "presence":
-    case "system":
       return "unsupported"
     default: {
       const _exhaustive: never = mode

@@ -12,7 +12,7 @@ UI (apps/web)  — web, or hosted by apps/desktop (Tauri)
   → drivers
       → WakeLockDriver          (navigator.wakeLock)
       → GeneratedMediaDriver   (Rust WASM frames → MediaStream → <video>)
-      → SystemInhibitDriver    (desktop, PR 4)
+      → SystemInhibitDriver    (desktop IOPMAssertion)
 ```
 
 `system` is supported on desktop and unsupported on web. `presence` is

@@ -1,6 +1,7 @@
 # tabawake
 
 Keep **this screen** awake while **this tab** is visible.
+On the macOS app, **System** keeps the machine from idle-sleeping after the window is hidden.
 
 Portfolio systems demo: Screen Wake Lock as the primary path, a Rust/WASM
 procedural frame engine streaming into `<video srcObject>`, thin custom Bazel
