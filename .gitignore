@@ -3,6 +3,10 @@
 /bazel-*
 user.bazelrc
 
+# Desktop
+apps/desktop/src-tauri/gen/
+apps/desktop/src-tauri/target/
+
 # Node
 *.tsbuildinfo
 .vite/

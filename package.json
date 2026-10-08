@@ -6,6 +6,8 @@
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "build": "pnpm wasm:stage && pnpm --filter @tabawake/web build",
+    "desktop:build": "pnpm wasm:stage && pnpm --filter @tabawake/desktop build",
+    "desktop:dev": "pnpm wasm:stage && pnpm --filter @tabawake/desktop dev",
     "dev": "pnpm wasm:stage && pnpm --filter @tabawake/web dev",
     "preview": "pnpm --filter @tabawake/web preview",
     "test": "pnpm --filter @tabawake/core test && pnpm wasm:stage && pnpm --filter @tabawake/web test",

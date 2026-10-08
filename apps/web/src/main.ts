@@ -10,6 +10,7 @@ import {
 } from "@tabawake/core"
 import { modeCopy } from "./copy/modes"
 import { screenOptionState } from "./drivers/screenOption"
+import { detectRuntime } from "./runtime"
 import {
   classifyWakeLockError,
   startWakeLockDriver,
@@ -26,8 +27,7 @@ import {
   type TimerFidelity,
 } from "./frame"
 
-/** Host for this page. Desktop detection lands with the Tauri shell. */
-const RUNTIME = "web" as const
+const RUNTIME = detectRuntime()
 
 const OFFERED_MODES = offeredModes(RUNTIME)
 

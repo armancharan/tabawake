@@ -1,4 +1,7 @@
 .git
+apps/desktop/node_modules
+apps/desktop/src-tauri/gen
+apps/desktop/src-tauri/target
 apps/web/dist
 apps/web/node_modules
 bazel-bin

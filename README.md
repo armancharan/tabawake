@@ -15,6 +15,7 @@ corepack enable && corepack prepare pnpm@9 --activate
 
 pnpm install
 pnpm dev                # stages WASM, then http://127.0.0.1:5173
+pnpm desktop:dev        # same UI in a Tauri window (macOS)
 ```
 
 ## Scripts
@@ -25,7 +26,9 @@ pnpm dev                # stages WASM, then http://127.0.0.1:5173
 | `bazelisk test //crates/frame_engine:frame_engine_test` | Rust frame tests |
 | `bazelisk test //e2e:media_stream_e2e` | Same e2e through Bazel |
 | `pnpm build` | Production web build |
-| `pnpm dev` | Vite web UI |
+| `pnpm desktop:build` | Tauri macOS app |
+| `pnpm desktop:dev` | Same UI in a Tauri window |
+| `pnpm dev` | Vite web UI (stages WASM first) |
 | `pnpm test` | Core + web unit tests (stages WASM for the web suite) |
 | `pnpm test:e2e` | Playwright media-stream contract |
 | `pnpm wasm:stage` | Build `//crates/frame_engine:frame_engine_web` and stage artifacts |
@@ -33,6 +36,7 @@ pnpm dev                # stages WASM, then http://127.0.0.1:5173
 ## Layout
 
 ```text
+apps/desktop             Tauri 2 host (macOS)
 apps/web                 UI + drivers
 crates/frame_engine      Rust RGBA painter (+ WASM)
 docs/ARCHITECTURE.md     deeper design notes
