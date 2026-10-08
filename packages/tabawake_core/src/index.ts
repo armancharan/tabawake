@@ -2,6 +2,7 @@ export {
   capabilityFor,
   desktopCapability,
   initialSession,
+  offeredModes,
   reduceSession,
   webCapability,
   type AppRuntime,

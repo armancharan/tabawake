@@ -2,6 +2,7 @@ import "./styles/main.css"
 import {
   capabilityFor,
   initialSession,
+  offeredModes,
   reduceSession,
   type KeepAwakeMode,
   type SessionSnapshot,
@@ -28,13 +29,7 @@ import {
 
 const RUNTIME = detectRuntime()
 
-/** Modes offered in the web UI (desktop-only modes stay in the domain). */
-const WEB_MODES: KeepAwakeMode[] = ["screen", "generated"]
-
-/** Same two mechanisms; System waits for the native inhibit driver. */
-const DESKTOP_MODES: KeepAwakeMode[] = ["screen", "generated"]
-
-const OFFERED_MODES = RUNTIME === "desktop" ? DESKTOP_MODES : WEB_MODES
+const OFFERED_MODES = offeredModes(RUNTIME)
 
 let snap: SessionSnapshot = initialSession()
 let mode: KeepAwakeMode = "generated"
@@ -370,7 +365,6 @@ function paintModes() {
 
   els.modes.innerHTML = OFFERED_MODES.map((m) => {
     const copy = modeCopy(RUNTIME, m)
-    const cap = capabilityFor(RUNTIME, m)
     if (m === "screen") {
       const retry = screen.showRetry
         ? ` <button type="button" class="mode-retry" data-ref="screen-retry">Try again</button>`
@@ -394,14 +388,12 @@ function paintModes() {
       </label>`
     }
 
-    const disabled = cap === "unsupported"
     const isSelected = selected === m
     return `
-      <label class="mode${isSelected ? " is-selected" : ""}${disabled ? " is-disabled" : ""}">
+      <label class="mode${isSelected ? " is-selected" : ""}">
         <span class="mode-control">
           <input type="radio" name="mode" value="${m}"
-            ${isSelected ? "checked" : ""}
-            ${disabled ? "disabled" : ""} />
+            ${isSelected ? "checked" : ""} />
           <span class="mode-mark" aria-hidden="true"></span>
         </span>
         <span class="mode-copy">
@@ -589,9 +581,12 @@ async function startDriverForCurrentMode() {
     }
     return
   }
-  throw Object.assign(new Error(`${modeCopy(RUNTIME, mode).label} needs the desktop app`), {
-    reason: "unsupported" as StopReason,
-  })
+  throw Object.assign(
+    new Error(`${modeCopy(RUNTIME, mode).label} is not supported on this host`),
+    {
+      reason: "unsupported" as StopReason,
+    },
+  )
 }
 
 /**

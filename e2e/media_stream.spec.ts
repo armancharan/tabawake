@@ -31,7 +31,7 @@ test.describe("tabawake", () => {
     await expect(page.getByRole("heading", { name: "tabawake" })).toBeVisible()
     await expect(page.getByTestId("status")).toContainText("Ready")
     await expect(page.getByRole("radio", { name: /Video/i })).toBeChecked()
-    await expect(page.getByRole("radio", { name: /Seconds/i })).toBeChecked()
+    await expect(page.getByRole("radio", { name: /^Seconds/ })).toBeChecked()
     await expect(page.getByTestId("preview-video")).toBeVisible()
   })
 
@@ -66,7 +66,7 @@ test.describe("tabawake", () => {
 
     await page.getByRole("radio", { name: /Milliseconds/i }).click()
     await expect(page.getByRole("radio", { name: /Milliseconds/i })).toBeChecked()
-    await expect(page.getByRole("radio", { name: /Seconds/i })).not.toBeChecked()
+    await expect(page.getByRole("radio", { name: /^Seconds/ })).not.toBeChecked()
 
     await page.getByRole("radio", { name: /Screen/i }).click()
     await expect(page.getByTestId("preview-canvas")).toBeVisible()

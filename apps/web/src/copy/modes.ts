@@ -24,7 +24,7 @@ const WEB: Record<KeepAwakeMode, ModeCopy> = {
   },
   presence: {
     label: "Presence",
-    blurbHtml: "Coming in the desktop app.",
+    blurbHtml: "",
   },
   screen: {
     label: "Screen Wake Lock",
@@ -32,7 +32,7 @@ const WEB: Record<KeepAwakeMode, ModeCopy> = {
   },
   system: {
     label: "System",
-    blurbHtml: "Coming in the desktop app.",
+    blurbHtml: "",
   },
 }
 
@@ -43,7 +43,7 @@ const DESKTOP: Record<KeepAwakeMode, ModeCopy> = {
   },
   presence: {
     label: "Presence",
-    blurbHtml: "Not in this build.",
+    blurbHtml: "",
   },
   screen: {
     label: "Screen Wake Lock",
@@ -51,10 +51,19 @@ const DESKTOP: Record<KeepAwakeMode, ModeCopy> = {
   },
   system: {
     label: "System",
-    blurbHtml: "OS idle-sleep inhibit. Not wired in this build.",
+    blurbHtml: "",
   },
 }
 
 export function modeCopy(runtime: AppRuntime, mode: KeepAwakeMode): ModeCopy {
-  return runtime === "desktop" ? DESKTOP[mode] : WEB[mode]
+  switch (runtime) {
+    case "desktop":
+      return DESKTOP[mode]
+    case "web":
+      return WEB[mode]
+    default: {
+      const _exhaustive: never = runtime
+      return _exhaustive
+    }
+  }
 }

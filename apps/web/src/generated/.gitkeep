@@ -1,2 +1,1 @@
-# Staged by `pnpm wasm:stage` (Bazel → wasm-bindgen artifacts).
-# `frame_engine.stub.js` is committed; generated `.js` / `.wasm` are gitignored.
+# Staged by `pnpm wasm:stage`. Bindgen output is gitignored.
