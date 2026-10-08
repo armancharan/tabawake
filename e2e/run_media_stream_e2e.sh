@@ -71,7 +71,7 @@ if [[ ! -d node_modules ]]; then
   "${PNPM_BIN}" install --frozen-lockfile=false
 fi
 
-bash scripts/stage-wasm.sh
+"${PNPM_BIN}" wasm:stage
 
 "${PNPM_BIN}" --filter @tabawake/web build
 "${PNPM_BIN}" --filter @tabawake/e2e exec playwright install chromium

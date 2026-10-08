@@ -146,7 +146,7 @@ export function webCapability(mode: KeepAwakeMode): Capability {
   }
 }
 
-/** Desktop capability matrix — `system` is a native inhibit; `presence` is not built. */
+/** Desktop capability matrix — `presence` is not built in this slice. */
 export function desktopCapability(mode: KeepAwakeMode): Capability {
   switch (mode) {
     case "generated":
@@ -166,5 +166,28 @@ export function capabilityFor(
   runtime: AppRuntime,
   mode: KeepAwakeMode,
 ): Capability {
-  return runtime === "desktop" ? desktopCapability(mode) : webCapability(mode)
+  switch (runtime) {
+    case "desktop":
+      return desktopCapability(mode)
+    case "web":
+      return webCapability(mode)
+    default: {
+      const _exhaustive: never = runtime
+      return _exhaustive
+    }
+  }
+}
+
+const KEEP_AWAKE_MODES: KeepAwakeMode[] = [
+  "screen",
+  "generated",
+  "system",
+  "presence",
+]
+
+/** Modes this host can honestly offer. Unsupported modes stay out of the UI. */
+export function offeredModes(runtime: AppRuntime): KeepAwakeMode[] {
+  return KEEP_AWAKE_MODES.filter(
+    (mode) => capabilityFor(runtime, mode) !== "unsupported",
+  )
 }
